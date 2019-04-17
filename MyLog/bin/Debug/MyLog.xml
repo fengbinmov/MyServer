@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyLog</name>
+    </assembly>
+    <members>
+        <member name="T:MyLog.Debug">
+            <summary>
+            Log 信息输出类
+            
+            初始化时,会解析软件根目录下的[log4net.config]文件
+            主要目的是：
+                读取Log文件存放目录
+                读取Log信息存入格式
+            </summary>
+        </member>
+        <member name="M:MyLog.Debug.Init">
+             <summary>
+            MyLog 的初始化
+             </summary>
+        </member>
+        <member name="M:MyLog.Debug.Info(System.String)">
+            <summary>
+            输出 Info 类型的Log 信息到本地记录文件中
+            </summary>
+            <param name="mess">将要存储到Log文件中的信息</param>
+        </member>
+        <member name="M:MyLog.Debug.Error(System.String)">
+            <summary>
+            输出 Error 类型的Log 信息到本地记录文件中
+            </summary>
+            <param name="mess">将要存储到Log文件中的信息</param>
+        </member>
+        <member name="M:MyLog.Debug.Warring(System.String)">
+            <summary>
+            输出 Warring 类型的Log 信息到本地记录文件中
+            </summary>
+            <param name="mess">将要存储到Log文件中的信息</param>
+        </member>
+    </members>
+</doc>

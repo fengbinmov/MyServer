@@ -1,0 +1,12 @@
+F:\C09_C#_Code\MyLog\MyLog\MyLog\bin\Debug\MyLog.dll
+F:\C09_C#_Code\MyLog\MyLog\MyLog\bin\Debug\MyLog.pdb
+F:\C09_C#_Code\MyLog\MyLog\MyLog\obj\Debug\MyLog.csproj.CoreCompileInputs.cache
+F:\C09_C#_Code\MyLog\MyLog\MyLog\obj\Debug\MyLog.dll
+F:\C09_C#_Code\MyLog\MyLog\MyLog\obj\Debug\MyLog.pdb
+F:\C09_C#_Code\MyLog\MyLog\MyLog\bin\Debug\MyLog.xml
+F:\C09_C#_Code\MyServer\MyServer\MyLog\bin\Debug\MyLog.dll
+F:\C09_C#_Code\MyServer\MyServer\MyLog\bin\Debug\MyLog.pdb
+F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MyLog.csprojResolveAssemblyReference.cache
+F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MyLog.csproj.CoreCompileInputs.cache
+F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MyLog.dll
+F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MyLog.pdb

@@ -1,0 +1,10 @@
+F:\C09_C#_Code\MyServer\MyServer\MyServer\bin\Debug\MyServer.exe.config
+F:\C09_C#_Code\MyServer\MyServer\MyServer\bin\Debug\MyServer.exe
+F:\C09_C#_Code\MyServer\MyServer\MyServer\bin\Debug\MyServer.pdb
+F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MyServer.csproj.CoreCompileInputs.cache
+F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MyServer.exe
+F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MyServer.pdb
+F:\C09_C#_Code\MyServer\MyServer\MyServer\bin\Debug\MyLog.dll
+F:\C09_C#_Code\MyServer\MyServer\MyServer\bin\Debug\MyLog.pdb
+F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MyServer.csproj.CopyComplete
+F:\C09_C#_Code\MyServer\MyServer\MyServer\bin\Debug\MyLog.xml
