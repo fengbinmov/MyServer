@@ -29,7 +29,8 @@ namespace MServer.Demo
         }
         public override void Update()
         {
-            switch (Input.text)
+            string[] ms = Input.text.Split(' ');
+            switch (ms[0])
             {
                 case "dis connect":
                     server.DisAllConnectClient();
@@ -49,7 +50,7 @@ namespace MServer.Demo
                     Input.text = "";
                     break;
                 case "s":
-                    server.SendAllClient(new Medium.OperationRequest(1, DateTime.Now.ToString("hh:mm:ss ms")));
+                    server.SendAllClient(new Medium.OperationRequest(1, ms[1]));
                     Input.text = "";
                     break;
                 case "status":

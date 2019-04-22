@@ -88,13 +88,13 @@ namespace MServer.Client {
                     socketClient.Close();
                     return;
                 }
-                mess.ReadMessage(count, OnProcessDataCallBack);
+                mess.ReadMessage(count, OnProcessDataCallBack, socketClient);
 
                 socketClient.BeginReceive(mess.data, mess.curIndex, mess.RemainSize, SocketFlags.None, ReceiveCallBack, null);
             }
             catch (Exception)
             {
-                DebugLog("被动关闭客户端的连接");
+                DebugLog("被动关闭客户端的连接 ");
                 socketClient.Close();
             }
         }
@@ -116,6 +116,16 @@ namespace MServer.Client {
         /// <param name="operationRequest"> 操作信息，用来记录此次传送的指令与信息</param>
         public void SendRequest(OperationRequest operationRequest)
         {
+            Send(operationRequest.ToBytes());
+        }
+
+
+        /// <summary>
+        /// 发送字节到服务器
+        /// </summary>
+        /// <param name="operationRequest"> 操作信息，用来记录此次传送的指令与信息</param>
+        public void Send(byte[] bytes) {
+
             if (socketClient == null || !socketClient.Connected)
             {
                 DebugLog("未与服务器建立连接无法传输数据");
@@ -123,7 +133,7 @@ namespace MServer.Client {
             }
             try
             {
-                socketClient.Send(operationRequest.ToBytes());
+                socketClient.Send(bytes);
             }
             catch (Exception)
             {

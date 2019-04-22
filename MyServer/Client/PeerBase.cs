@@ -53,14 +53,15 @@ namespace MServer
                     initRequest.server.RemovePeerList(this);
                     return;
                 }
-                ms.ReadMessage(count, OnProcessCallBack);
+                ms.ReadMessage(count, OnProcessCallBack, initRequest.socket);
 
                 initRequest.socket.BeginReceive(ms.data, ms.curIndex, ms.RemainSize, SocketFlags.None, ReceiveCallBack, null);
+
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 #region MyLog
-                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "]");
+                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] "+e.ToString());
                 #endregion
                 initRequest.socket.Close();
                 initRequest.server.RemovePeerList(this);

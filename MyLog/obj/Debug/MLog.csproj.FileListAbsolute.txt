@@ -3,4 +3,3 @@ F:\C09_C#_Code\MyServer\MyServer\MyLog\bin\Debug\MyLog.pdb
 F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MLog.csproj.CoreCompileInputs.cache
 F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MyLog.dll
 F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MyLog.pdb
-F:\C09_C#_Code\MyServer\MyServer\MyLog\obj\Debug\MLog.csprojAssemblyReference.cache
