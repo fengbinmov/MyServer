@@ -58,10 +58,10 @@ namespace MServer
                 initRequest.socket.BeginReceive(ms.data, ms.curIndex, ms.RemainSize, SocketFlags.None, ReceiveCallBack, null);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 #region MyLog
-                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] "+e.ToString());
+                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] ");
                 #endregion
                 initRequest.socket.Close();
                 initRequest.server.RemovePeerList(this);

@@ -15,10 +15,12 @@ namespace MServer.Client {
         private Apply OnOperationResponse;                  //网络传输响应方法
 
         public Socket SocketClient { get { return socketClient; } }
+        public bool Connected { get { return socketClient != null && socketClient.Connected; } }
         public Apply DebugApply = null;                     //指定输出Debug信息的方法
         public Apply OnDisconnectApply = null;              //指定在断开连接前启动的方法
-        
 
+
+        private bool isDisConnect = false;
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -56,6 +58,7 @@ namespace MServer.Client {
                 socketClient.BeginReceive(mess.data, mess.curIndex, mess.RemainSize, SocketFlags.None, ReceiveCallBack, socketClient);
 
                 Console.WriteLine("主动连接服务端[CRIP," + socketClient.RemoteEndPoint.ToString() + "]");
+                isDisConnect = false;
             }
             catch (Exception)
             {
@@ -83,7 +86,8 @@ namespace MServer.Client {
                 int count = socketClient.EndReceive(result);
                 if (count == 0) {
 
-                    DebugLog("被动关闭与服务端的连接[CRIP," + socketClient.RemoteEndPoint + "]");
+                    if (!isDisConnect)
+                        DebugLog("被动关闭与服务端的连接[CRIP," + socketClient.RemoteEndPoint + "]");
                     socketClient.Shutdown(SocketShutdown.Both);
                     socketClient.Close();
                     return;
@@ -94,7 +98,8 @@ namespace MServer.Client {
             }
             catch (Exception)
             {
-                DebugLog("被动关闭客户端的连接 ");
+                if (!isDisConnect)
+                    DebugLog("被动关闭客户端的连接 ");
                 socketClient.Close();
             }
         }
@@ -118,7 +123,6 @@ namespace MServer.Client {
         {
             Send(operationRequest.ToBytes());
         }
-
 
         /// <summary>
         /// 发送字节到服务器
@@ -154,15 +158,15 @@ namespace MServer.Client {
 
                 socketClient.Shutdown(SocketShutdown.Both);
                 socketClient.Close();
+                isDisConnect = true;
             }
             else
             {
                 DebugLog("主动断开服务端");
                 socketClient.Close();
+                isDisConnect = true;
             }
         }
-
-
 
         private void DebugLog(string ms) {
             DebugApply?.Invoke(new OperationRequest(0, ms));

@@ -30,6 +30,9 @@ namespace MServer.Demo
         public override void Update()
         {
             string[] ms = Input.text.Split(' ');
+            if (ms[0] != "s") {
+                ms[0] = Input.text;
+            }
             switch (ms[0])
             {
                 case "dis connect":
@@ -50,7 +53,8 @@ namespace MServer.Demo
                     Input.text = "";
                     break;
                 case "s":
-                    server.SendAllClient(new Medium.OperationRequest(1, ms[1]));
+                    if(ms.Length > 1)
+                        server.SendAllClient(new Medium.OperationRequest(1, ms[1]));
                     Input.text = "";
                     break;
                 case "status":
