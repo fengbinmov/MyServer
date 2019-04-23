@@ -15,7 +15,8 @@ namespace MServer
         static List<AppBase> apps;
         static List<Thread> appThread;
 
-        static void Start() {
+        static void Start()
+        {
 
             ISRUN = true;
             Debug.Init();
@@ -25,7 +26,8 @@ namespace MServer
             appThread = new List<Thread>();
         }
 
-        static void Destroy() {
+        static void Destroy()
+        {
 
             Debug.Close();
             apps.Clear();
@@ -36,17 +38,18 @@ namespace MServer
 
         static void Main(string[] args)
         {
+
             #region 启动程序
             Start();
-            #endregion
+        #endregion
 
             #region 启动菜单
-        START: Console.WriteLine("1. MyServer");
+            START: Console.WriteLine("1. MyServer");
             string getNum = Console.ReadLine();
             switch (getNum)
             {
                 case "1":
-                    MyServerApp  myIntnet = new MyServerApp();
+                    MyServerApp myIntnet = new MyServerApp();
                     (myIntnet as MyServerApp).Init(Debug.ServerInfos.serverIP, Debug.ServerInfos.serverProt);
                     apps.Add(myIntnet);
                     break;
@@ -72,10 +75,11 @@ namespace MServer
             }
 
             //3.执行指定程序的结束响应
-            for (int i = 0; i < apps.Count; i++) {
+            for (int i = 0; i < apps.Count; i++)
+            {
                 apps[i].enable = false;
             }
-            Console.ReadKey();
+            Thread.Sleep(2000);
 
 
             #endregion

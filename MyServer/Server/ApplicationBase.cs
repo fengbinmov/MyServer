@@ -162,6 +162,22 @@ namespace MServer
             }
         }
 
+        public void SendAllClient(Byte[] _data)
+        {
+
+            if (peerList.Count > 0)
+            {
+                for (int i = 0; i < peerList.Count; i++)
+                {
+                    peerList[i].Send (_data);
+                }
+            }
+            else
+            {
+                Debug.Info("客户端连接数为 0");
+            }
+        }
+
         /// <summary>
         /// 服务器关闭后调用的方法
         /// </summary>

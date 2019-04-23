@@ -4,10 +4,16 @@ using System.Text;
 
 namespace MServer.Medium
 {
+    public enum SendType
+    {
+        String = 0,
+        File = 1
+    }
 
     public sealed class OperationRequest
     {
-        Int32 operationCode;                     //操作代码
+        SendType sendType;                          //发送文件类型 0 字符串 | 1 文件
+        Int32 operationCode;                    //操作代码
         string parameters;                      //数据信息字典
 
 
@@ -19,10 +25,11 @@ namespace MServer.Medium
         public OperationRequest() { }
 
         //send Text
-        public OperationRequest(Int32 _operationCode, string _parameters)
+        public OperationRequest(Int32 _operationCode, string _parameters, SendType _sendType = SendType.String)
         {
             operationCode = _operationCode;
             parameters = _parameters;
+            sendType = _sendType;
         }
 
 
@@ -33,10 +40,11 @@ namespace MServer.Medium
             byte[] dataAmount = BitConverter.GetBytes(requestBytes.Length + msgDataBytes.Length);
             Console.WriteLine(msgDataBytes.Length);
 
-            byte[] packBytes = new byte[requestBytes.Length + msgDataBytes.Length + dataAmount.Length];
-            dataAmount.CopyTo(packBytes, 0);
-            requestBytes.CopyTo(packBytes, dataAmount.Length);
-            msgDataBytes.CopyTo(packBytes, dataAmount.Length + requestBytes.Length);
+            byte[] packBytes = new byte[1 + requestBytes.Length + msgDataBytes.Length + dataAmount.Length];
+            packBytes[0] = (byte)sendType;
+            dataAmount.CopyTo(packBytes, 1);
+            requestBytes.CopyTo(packBytes, dataAmount.Length + 1);
+            msgDataBytes.CopyTo(packBytes, dataAmount.Length + requestBytes.Length + 1);
 
             return packBytes;
         }

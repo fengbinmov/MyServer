@@ -8,3 +8,4 @@ F:\C09_C#_Code\MyServer\MyServer\MyServerClient\obj\Debug\MServerClient.csproj.C
 F:\C09_C#_Code\MyServer\MyServer\MyServerClient\obj\Debug\MServerClient.csproj.CopyComplete
 F:\C09_C#_Code\MyServer\MyServer\MyServerClient\obj\Debug\MyServerClient.dll
 F:\C09_C#_Code\MyServer\MyServer\MyServerClient\obj\Debug\MyServerClient.pdb
+F:\C09_C#_Code\MyServer\MyServer\MyServerClient\obj\Debug\MServerClient.csprojAssemblyReference.cache

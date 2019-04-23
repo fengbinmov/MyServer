@@ -6,10 +6,7 @@ using System.Text;
 
 namespace MServer.Medium
 {
-    public enum SendType {
-        String = 1,
-        File = 2
-    }
+
     public class BaseMessage
     {
         public byte[] data = new byte[1024];
@@ -30,18 +27,18 @@ namespace MServer.Medium
         public void ReadMessage(int dataAmount, Action<OperationRequest> processCallBackS, Socket socket)
         {
             //真实的可用数据总数 count = mess
-            int count = BitConverter.ToInt32(data, 0) - 4;
+            byte sendType = data[0];
+            int count = BitConverter.ToInt32(data, 1) - 4;  //=
 
-            if (dataAmount - 4 > 0 && count > 0)
+            if (dataAmount - 5 > 0 && count > 0)
             {
-                Int32 operationCode = BitConverter.ToInt32(data, 4);
+                Int32 operationCode = BitConverter.ToInt32(data, 5);
 
                 curIndex = 0;
 
                 try
                 {
-
-                    getDataBuffer = new byte[count];
+                    getDataBuffer = new byte[count];    //=
                 }
                 catch (Exception) {
                     getDataBuffer = null;
@@ -49,7 +46,7 @@ namespace MServer.Medium
                 }
 
 
-                if (operationCode == (int)SendType.String)
+                if (sendType == (int)SendType.String)
                 {
                     string parameters = "";
                     while (curIndex < count)
@@ -57,9 +54,9 @@ namespace MServer.Medium
                         if (curIndex == 0)
                         {
                             //数据包兼容处理
-                            int getCount = count > data.Length ? data.Length - 8 : count;
+                            int getCount = count > data.Length ? data.Length - 9 : count;
 
-                            Array.Copy(data, 8, getDataBuffer, curIndex, getCount);
+                            Array.Copy(data, 9, getDataBuffer, curIndex, getCount);
 
                             curIndex += getCount;
                             Console.WriteLine(curIndex + " " + count);
@@ -80,7 +77,7 @@ namespace MServer.Medium
 
                     processCallBackS(new OperationRequest(operationCode, parameters));
                 }
-                else if (operationCode == (int)SendType.File)
+                else if (sendType == (int)SendType.File)
                 {
                     FileStream file = null;
                     bool getFileHead = true;
@@ -90,9 +87,9 @@ namespace MServer.Medium
                         if (curIndex == 0 && getFileHead)
                         {
                             //数据包兼容处理
-                            int getCount = count > data.Length ? data.Length - 8 : count;
+                            int getCount = count > data.Length ? data.Length - 9 : count;
 
-                            Array.Copy(data, 8, getDataBuffer, curIndex, getCount);
+                            Array.Copy(data, 9, getDataBuffer, curIndex, getCount);
 
                             string[] mess = Encoding.UTF8.GetString(getDataBuffer, 0, getDataBuffer.Length).Split('|');
                             string fileName = mess[0];

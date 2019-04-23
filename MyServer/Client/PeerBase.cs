@@ -58,10 +58,10 @@ namespace MServer
                 initRequest.socket.BeginReceive(ms.data, ms.curIndex, ms.RemainSize, SocketFlags.None, ReceiveCallBack, null);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 #region MyLog
-                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] ");
+                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] "+e.ToString());
                 #endregion
                 initRequest.socket.Close();
                 initRequest.server.RemovePeerList(this);
@@ -76,6 +76,12 @@ namespace MServer
         public virtual void OnOperationRequest(OperationRequest operationRequest) { }
 
         public void SendOperationResponse(OperationRequest operationRequest) {
+            
+            Send(operationRequest.ToBytes());
+        }  
+
+        public void Send(byte[] bytes)
+        {
 
             if (initRequest.socket == null || !initRequest.socket.Connected)
             {
@@ -84,13 +90,13 @@ namespace MServer
             }
             try
             {
-                initRequest.socket.Send(operationRequest.ToBytes());
+                initRequest.socket.Send(bytes);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Debug.Warring("向客户端传输数据失败");
+                Debug.Warring("向客户端传输数据失败 "+e.ToString());
             }
-        } 
+        }
 
         //与客户端断开前
         public virtual void OnDisconnect() { }

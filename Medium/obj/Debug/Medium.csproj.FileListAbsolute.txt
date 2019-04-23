@@ -5,4 +5,3 @@ F:\C09_C#_Code\MyServer\MyServer\Medium\obj\Debug\Medium.dll
 F:\C09_C#_Code\MyServer\MyServer\Medium\obj\Debug\Medium.pdb
 F:\C09_C#_Code\MyServer\MyServer\Medium\bin\Debug\Medium.dll
 F:\C09_C#_Code\MyServer\MyServer\Medium\bin\Debug\Medium.pdb
-F:\C09_C#_Code\MyServer\MyServer\Medium\obj\Debug\Medium.csprojAssemblyReference.cache

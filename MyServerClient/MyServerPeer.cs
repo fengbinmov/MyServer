@@ -21,6 +21,7 @@ namespace MServer.Client {
 
 
         private bool isDisConnect = false;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -96,10 +97,10 @@ namespace MServer.Client {
 
                 socketClient.BeginReceive(mess.data, mess.curIndex, mess.RemainSize, SocketFlags.None, ReceiveCallBack, null);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 if (!isDisConnect)
-                    DebugLog("被动关闭客户端的连接 ");
+                    DebugLog("被动关闭客户端的连接 "+e.ToString());
                 socketClient.Close();
             }
         }

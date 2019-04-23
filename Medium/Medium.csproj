@@ -37,6 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseMessage.cs" />
+    <Compile Include="CommponentSystem\Commponents.cs" />
+    <Compile Include="CommponentSystem\CommponentSystem.cs" />
+    <Compile Include="CommponentSystem\MCommponent.cs" />
     <Compile Include="OperationRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Result.cs" />

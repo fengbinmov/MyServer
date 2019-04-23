@@ -10,3 +10,4 @@ F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MServer.csproj.CoreCompileIn
 F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MServer.csproj.CopyComplete
 F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MyServer.exe
 F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MyServer.pdb
+F:\C09_C#_Code\MyServer\MyServer\MyServer\obj\Debug\MServer.csprojAssemblyReference.cache
