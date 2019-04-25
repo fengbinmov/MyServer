@@ -6,47 +6,81 @@ using System.Threading.Tasks;
 
 namespace MServer
 {
-    public abstract class ClientPeer : PeerBase,Commponents
+    public class ClientPeer : PeerBase,Components
     {
-        protected ClientPeer(InitRequest _initRequest):base(_initRequest) { }
+        public ClientPeer(InitRequest _initRequest):base(_initRequest) { }
 
         //组件容器 <id , 组件>
-        private Dictionary<string, MCommponent> commponDict = new Dictionary<string, MCommponent>();
-        public int ComCount { get { return commponDict.Count; } }
+        private Dictionary<Type, MComponent> componDict = new Dictionary<Type, MComponent>();
+        public int ComCount { get { return componDict.Count; } }
 
         //添加组件
-        public bool AddCommponent(MCommponent mCommponent)
+        public T AddComponent<T>() where T : MComponent ,new()
         {
+            return AddComponent<T>(new T());
+        }
+        public T AddComponent<T>(T mComponent) where T : MComponent, new()
+        {
+            if (mComponent == null) return null;
 
-            if (mCommponent == null || commponDict.ContainsKey(mCommponent.mName) || commponDict.Count >= 888) return false;
+            if (componDict.ContainsKey(typeof(T)))
+            {
+                return componDict[typeof(T)] as T;
+            }
 
-            commponDict.Add(mCommponent.mName, mCommponent);
+            componDict.Add(typeof(T), mComponent);
 
-            return true;
+            mComponent.OnEnable();
+
+            return mComponent;
         }
 
         //删除组件
-        public bool RemoveCommponent(string _mName)
+        public void RemoveComponent<T>()
         {
-            if (commponDict.Count == 0 || !commponDict.ContainsKey(_mName)) return false;
+            if (componDict.Count == 0 || !componDict.ContainsKey(typeof(T))) return;
 
-            commponDict.Remove(_mName);
+            componDict[typeof(T)].OnDestroy();
 
-            return true;
+            componDict.Remove(typeof(T));
         }
-        
-        //获取组件
-        public MCommponent GetCommponent(string _mName)
+        //弹出组件
+        public T PopComponent<T>() where T : MComponent
         {
 
-            MCommponent value = null;
+            MComponent value = null;
 
-            if (commponDict.ContainsKey(_mName))
+            if (componDict.ContainsKey(typeof(T)))
             {
-                value = commponDict[_mName];
+                value = componDict[typeof(T)];
+                componDict[typeof(T)].DisEnable();
+                componDict.Remove(typeof(T));
             }
 
-            return value;
+            return value as T;
+        }
+
+        //获取组件
+        public T GetComponent<T> () where T: MComponent
+        {
+
+            MComponent value = null;
+
+            if (componDict.ContainsKey(typeof(T)))
+            {
+                value = componDict[typeof(T)];
+            }
+
+            return value as T;
+        }
+
+        public override void OnDisconnect()
+        {
+            foreach (Type item in componDict.Keys)
+            {
+                componDict[item].OnDestroy();
+            }
+            componDict.Clear();
         }
     }
 }

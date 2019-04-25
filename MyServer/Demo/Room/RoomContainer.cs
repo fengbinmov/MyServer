@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using MServer.Medium;
+using System.Text;
 
 namespace MServer.Demo
 {
-    class RoomContainer : MCommponent
+    class RoomContainer : MComponent
     {
         //room master index = 0;
-        private List<ClientPeer> roomPeers;
-        
+        private List<RoomBed> roomBeds = new List<RoomBed>();
+
         public RoomContainer():base() { }
 
         public override void OnEnable()
@@ -18,66 +19,114 @@ namespace MServer.Demo
 
         public override void OnDestroy()
         {
-            CommponentSystem.CS.RemoveCommponent(mName);
-
-            for (int i = 0; i < roomPeers.Count; i++)
+            base.OnDestroy();
+            
+            if (RoomSystem.RS.roomMarks.ContainsKey(mName))
             {
-                roomPeers[i].RemoveCommponent(mName);
+                RoomSystem.RS.roomMarks.Remove(mName);
+            }
+            for (int i = 0; i < roomBeds.Count; i++)
+            {
+                roomBeds[i].room = null;
+            }
+            roomBeds.Clear();
+        }
+
+        public bool IsMaster(RoomBed bed) {
+
+            if (roomBeds.Count < 1) return false;
+
+            return roomBeds[0] == bed;
+        }
+        
+        public void InitRoom(string _name, RoomBed bed) {
+
+            if (roomBeds.Count == 0) {
+
+                mName = _name;
+                bed.room = this;
+                roomBeds.Add(bed);
             }
         }
 
-        public bool IsMaster(ClientPeer _peer) {
+        public bool JoinRoom(RoomBed bed) {
 
-            if (roomPeers.Count <= 0 || _peer == null)
-                return false;
-            return roomPeers.IndexOf(_peer) == 0;
-        }
-        
-        public void InitRoom(string _name, ClientPeer _peer) {
-            mName = _name;
-            roomPeers = new List<ClientPeer>() {
-                _peer
-            };
-        }
-
-        public bool JoinRoom(ClientPeer _peer) {
-
-            if (roomPeers.Count > 0)
+            if (roomBeds.Count > 0)
             {
-                roomPeers.Add(_peer);
-                return false;
+                bool havself = false;
+                for (int i = 0; i < roomBeds.Count; i++)
+                {
+                    if (roomBeds[i] == bed) {
+                        havself = true;
+                        break;
+                    }
+                }
+                if (!havself) {
+
+                    bed.room = this;
+                    roomBeds.Add(bed);
+                    return true;
+                }
             }
             return false;
         }
 
-        public void ExitRoom(ClientPeer _peer) {
-
-            if (roomPeers.IndexOf(_peer) > -1) {
-                roomPeers.Remove(_peer);
-            }
-        }
-
-        public void Send(ClientPeer _peer, OperationRequest operation) {
-
-            for (int i = 0; i < roomPeers.Count; i++)
-            {
-                if (roomPeers[i] != _peer) {
-
-                    roomPeers[i].SendOperationResponse(operation);
-                }
-            }
-        }
-
-        public void Send(ClientPeer _peer, byte[] _data)
+        public void ExitRoom(RoomBed bed)
         {
-            for (int i = 0; i < roomPeers.Count; i++)
+
+            if (roomBeds.Count > 0)
             {
-                if (roomPeers[i] != _peer)
+                bool havself = false;
+                for (int i = 0; i < roomBeds.Count; i++)
                 {
-                    roomPeers[i].Send(_data);
+                    if (roomBeds[i] == bed)
+                    {
+                        havself = true;
+                        break;
+                    }
+                }
+                if (havself)
+                {
+                    if (roomBeds[0] == bed && roomBeds.Count > 1)
+                    {
+                        roomBeds[1].master.AddComponent(bed.master.PopComponent<RoomContainer>());
+                    }
+                    else if (roomBeds.Count == 1)
+                    {
+                        bed.master.RemoveComponent<RoomContainer>();
+                    }
+                    roomBeds.Remove(bed);
                 }
             }
         }
 
+        public void SendRoomResponse(RoomBed bed, OperationRequest operation) {
+
+            for (int i = 0; i < roomBeds.Count; i++)
+            {
+                if (roomBeds[i] != null && roomBeds[i] != bed) {
+
+                    roomBeds[i].master.SendOperationResponse(operation);
+                }
+            }
+        }
+
+        public string StatusInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(roomBeds.Count);
+            sb.Append("|");
+            sb.Append(mName);
+            for (int i = 0; i < roomBeds.Count; i++)
+            {
+                sb.Append("|");
+                if (roomBeds[i] != null && roomBeds[i].master.Socket.Connected)
+                {
+                    sb.Append(roomBeds[i].master.Socket.RemoteEndPoint.ToString());
+                }
+            }
+            return sb.ToString();
+        }
     }
 }

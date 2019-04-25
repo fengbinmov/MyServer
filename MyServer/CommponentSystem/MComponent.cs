@@ -4,9 +4,9 @@ using System.Text;
 
 namespace MServer
 {
-    public class MCommponent
+    public class MComponent
     {
-        public MCommponent() {
+        public MComponent() {
 
             mhashID = GetHashCode();
         }
@@ -23,6 +23,10 @@ namespace MServer
             avtiveSelf = true;
         }
 
+        public virtual void DisEnable()
+        {
+            avtiveSelf = false;
+        }
         public virtual void OnDestroy() {
             avtiveSelf = false;
         }

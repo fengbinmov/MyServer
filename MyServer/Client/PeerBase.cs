@@ -47,54 +47,54 @@ namespace MServer
                 int count = initRequest.socket.EndReceive(result);
                 if (count == 0)
                 {
+                    OnDisconnect();
                     Debug.Warring("被动关闭与客户端的连接[CRIP," + initRequest.socket.RemoteEndPoint + "]");
                     initRequest.socket.Shutdown(SocketShutdown.Both);
                     initRequest.socket.Close();
                     initRequest.server.RemovePeerList(this);
                     return;
                 }
-                ms.ReadMessage(count, OnProcessCallBack, initRequest.socket);
+                ms.ReadMessage(count, OnProcessCallBackS, initRequest.socket);
+
 
                 initRequest.socket.BeginReceive(ms.data, ms.curIndex, ms.RemainSize, SocketFlags.None, ReceiveCallBack, null);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                OnDisconnect();
                 #region MyLog
-                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] "+e.ToString());
+                Debug.Warring("被动关闭客户端[CRIP," + initRequest.socket.RemoteEndPoint.ToString() + "] ");
                 #endregion
                 initRequest.socket.Close();
                 initRequest.server.RemovePeerList(this);
             }
         }
 
-        private void OnProcessCallBack(OperationRequest operationRequest)
+        private void OnProcessCallBackS(OperationRequest operationRequest)
         {
             OnOperationRequest(operationRequest);
         }
 
         public virtual void OnOperationRequest(OperationRequest operationRequest) { }
 
-        public void SendOperationResponse(OperationRequest operationRequest) {
-            
-            Send(operationRequest.ToBytes());
-        }  
+        public virtual void OnOperationRequest(byte[] _data) { }
 
-        public void Send(byte[] bytes)
-        {
+        public void SendOperationResponse(OperationRequest operationRequest) {
 
             if (initRequest.socket == null || !initRequest.socket.Connected)
             {
                 Console.WriteLine(" 未与客户端建立连接无法传输数据");
                 return;
             }
+
             try
             {
-                initRequest.socket.Send(bytes);
+                initRequest.socket.Send(operationRequest.operationData);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.Warring("向客户端传输数据失败 "+e.ToString());
+                Debug.Warring("向客户端传输数据失败 ");
             }
         }
 

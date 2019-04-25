@@ -14,6 +14,7 @@ namespace MServer
         
         private Dictionary<Socket, string> socketDict = new Dictionary<Socket, string>();
         private List<PeerBase> peerList = new List<PeerBase>();
+        public List<PeerBase> PeerList { get { return peerList; } }
 
         private PeerBase currPeer;
 
@@ -25,6 +26,9 @@ namespace MServer
             iPEndPoint = new IPEndPoint(IPAddress.Parse(_ip),_port);
             ip = _ip;
             prot = _port;
+
+            ComponentSystem.CS = new ComponentSystem();
+            ComponentSystem.CS.appServer = this;
             #region MyLog
             Debug.Info("MyServer 初始化:[" + _ip + ":" + _port + "]");
             #endregion
@@ -162,21 +166,22 @@ namespace MServer
             }
         }
 
-        public void SendAllClient(Byte[] _data)
-        {
+        //TODO
+        //public void SendAllClient(Byte[] _data)
+        //{
 
-            if (peerList.Count > 0)
-            {
-                for (int i = 0; i < peerList.Count; i++)
-                {
-                    peerList[i].Send (_data);
-                }
-            }
-            else
-            {
-                Debug.Info("客户端连接数为 0");
-            }
-        }
+        //    if (peerList.Count > 0)
+        //    {
+        //        for (int i = 0; i < peerList.Count; i++)
+        //        {
+        //            peerList[i].Send (_data);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Debug.Info("客户端连接数为 0");
+        //    }
+        //}
 
         /// <summary>
         /// 服务器关闭后调用的方法

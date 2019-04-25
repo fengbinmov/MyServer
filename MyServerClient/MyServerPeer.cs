@@ -12,13 +12,14 @@ namespace MServer.Client {
         private BaseMessage mess = new BaseMessage();       //自身的信息处理中介
 
         public delegate void Apply(OperationRequest operation);
+        public delegate void ApplyD(byte[] operation);
         private Apply OnOperationResponse;                  //网络传输响应方法
 
         public Socket SocketClient { get { return socketClient; } }
         public bool Connected { get { return socketClient != null && socketClient.Connected; } }
         public Apply DebugApply = null;                     //指定输出Debug信息的方法
         public Apply OnDisconnectApply = null;              //指定在断开连接前启动的方法
-
+        private bool canSend = true;
 
         private bool isDisConnect = false;
 
@@ -27,7 +28,7 @@ namespace MServer.Client {
         /// </summary>
         /// <param name="_apply">接受到网络信息后的响应方法,接收一个OperationRequest类型参数</param>
         /// <param name="protocol"></param>
-        public MyServerPeer(Apply _apply,string ip,int prot)
+        public MyServerPeer(Apply _apply, string ip,int prot)
         {
             OnOperationResponse = _apply;
             iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), prot);
@@ -93,14 +94,19 @@ namespace MServer.Client {
                     socketClient.Close();
                     return;
                 }
-                mess.ReadMessage(count, OnProcessDataCallBack, socketClient);
+                if (mess.data[0] == (byte)SendType.File)
+                {
+                    canSend = false;
+                }
+                mess.ReadMessage(count, OnProcessDataCallBackS, socketClient);
+                canSend = true;
 
                 socketClient.BeginReceive(mess.data, mess.curIndex, mess.RemainSize, SocketFlags.None, ReceiveCallBack, null);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (!isDisConnect)
-                    DebugLog("被动关闭客户端的连接 "+e.ToString());
+                    DebugLog("被动关闭客户端的连接 ");
                 socketClient.Close();
             }
         }
@@ -108,12 +114,10 @@ namespace MServer.Client {
         /// <summary>
         /// 接受来自服务器的信息,交给RequestManager处理
         /// </summary>
-        private void OnProcessDataCallBack(OperationRequest operationRequest)
+        private void OnProcessDataCallBackS(OperationRequest operationRequest)
         {
             if (OnOperationResponse != null)
                 OnOperationResponse.Invoke(operationRequest);
-
-            DebugLog("消息[" + operationRequest.OperationCode + " " + operationRequest.Parameters + "]");
         }
 
         /// <summary>
@@ -122,7 +126,7 @@ namespace MServer.Client {
         /// <param name="operationRequest"> 操作信息，用来记录此次传送的指令与信息</param>
         public void SendRequest(OperationRequest operationRequest)
         {
-            Send(operationRequest.ToBytes());
+            Send(operationRequest.operationData);
         }
 
         /// <summary>
@@ -134,6 +138,11 @@ namespace MServer.Client {
             if (socketClient == null || !socketClient.Connected)
             {
                 DebugLog("未与服务器建立连接无法传输数据");
+                return;
+            }
+            if (!canSend)
+            {
+                Console.WriteLine("已禁止了传输数据");
                 return;
             }
             try
@@ -151,7 +160,7 @@ namespace MServer.Client {
         /// </summary>
         public void DisConnect()
         {
-            if (OnDisconnectApply != null) OnDisconnectApply.Invoke(new OperationRequest(0, null));
+            if (OnDisconnectApply != null) OnDisconnectApply.Invoke(new OperationRequest(0, string.Empty));
 
             if (socketClient != null && socketClient.Connected)
             {

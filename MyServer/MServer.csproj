@@ -50,14 +50,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommponentSystem\Components.cs" />
+    <Compile Include="CommponentSystem\ComponentSystem.cs" />
+    <Compile Include="CommponentSystem\MComponent.cs" />
+    <Compile Include="Demo\Room\RoomBed.cs" />
     <Compile Include="Demo\Room\RoomContainer.cs" />
     <Compile Include="Demo\App\AppBase.cs" />
     <Compile Include="Demo\MyClient.cs" />
     <Compile Include="Demo\MyServer.cs" />
     <Compile Include="Demo\MyServerApp.cs" />
-    <Compile Include="InfoTypes\InitRequest.cs" />
     <Compile Include="Client\ClientPeer.cs" />
     <Compile Include="Client\PeerBase.cs" />
+    <Compile Include="Demo\Room\RoomSystem.cs" />
+    <Compile Include="InfoTypes\InitRequest.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,10 +35,10 @@ namespace MServer
             Console.WriteLine("Server Quit");
             Console.ReadKey();
         }
+        static Action<int> aaa;
 
         static void Main(string[] args)
         {
-
             #region 启动程序
             Start();
         #endregion
@@ -52,6 +52,7 @@ namespace MServer
                     MyServerApp myIntnet = new MyServerApp();
                     (myIntnet as MyServerApp).Init(Debug.ServerInfos.serverIP, Debug.ServerInfos.serverProt);
                     apps.Add(myIntnet);
+
                     break;
                 default:
                     goto START;
@@ -79,7 +80,7 @@ namespace MServer
             {
                 apps[i].enable = false;
             }
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
 
             #endregion

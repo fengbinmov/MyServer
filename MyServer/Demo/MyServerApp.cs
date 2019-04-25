@@ -14,7 +14,7 @@ namespace MServer.Demo
         public string serverIP;
         public int serverProt;
         private bool isInit = false;
-        MyServer server;
+        public MyServer server;
 
         public void Init(string ip, int prot) {
             serverIP = ip;
@@ -36,7 +36,7 @@ namespace MServer.Demo
             }
             if (Input.GetCommand("cd"))
             {
-                Console.WriteLine(Input.ComText);
+                Console.WriteLine("cd="+Input.ComText);
             }
             if (Input.Equals("dis connect")) {
                 server.DisAllConnectClient();
@@ -61,6 +61,14 @@ namespace MServer.Demo
             if (Input.Equals("status"))
             {
                 showStatus();
+            }
+            if (Input.Equals("roomStatus"))
+            {
+                showRoomStatus();
+            }
+            if (Input.Equals("roomSystemStatus"))
+            {
+                showRoomStatus();
             }
             if (Input.Equals("q"))
             {
@@ -112,7 +120,7 @@ namespace MServer.Demo
                 FileStream file = new FileStream("G:/B02_BOOK/A_01_C++/Google C++编程风格指南.pdf", FileMode.Open);
                 int fileLenght = (int)file.Length;
 
-                server.SendAllClient(new OperationRequest(2, "Google C++编程风格指南.pdf|" + fileLenght, SendType.File));
+                server.SendAllClient(new OperationRequest(106, "Google C++编程风格指南.pdf|" + fileLenght, SendType.File));
 
                 byte[] sendData = new byte[1024];
                 int curIndex = 0;
@@ -122,11 +130,11 @@ namespace MServer.Demo
                     int rendLength = curIndex + sendData.Length > fileLenght ? (fileLenght - curIndex) : sendData.Length;
 
                     curIndex += file.Read(sendData, 0, rendLength);
-                    server.SendAllClient(sendData);
+                    server.SendAllClient(new OperationRequest(22,sendData));
 
-                    Console.WriteLine(curIndex + " " + fileLenght);
+                    //Console.WriteLine("file=" + curIndex + " " + fileLenght);
                 }
-                Console.WriteLine("文件提交完毕");
+                //Console.WriteLine("文件提交完毕");
 
                 //peer.SendRequest(new OperationRequest(1, ms));
             }
@@ -153,6 +161,21 @@ namespace MServer.Demo
             {
                 Debug.Order("空数据");
             }
+        }
+        void showRoomStatus() {
+
+            Debug.Order("查看房间信息");
+            List<RoomBed> beds = ComponentSystem.CS.GetCommponents<RoomBed>();
+            List<RoomContainer> rooms = ComponentSystem.CS.GetCommponents<RoomContainer>();
+
+
+            Debug.Order("房间数:"+rooms.Count +" 床位数:"+beds.Count);
+
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                Debug.Info(rooms[i].StatusInfo());
+            }
+            Debug.Info("-----------------------");
         }
     }
 }
